@@ -1,21 +1,20 @@
 "use client";
 
 import { useOptimistic, useTransition } from "react";
-import {
-  type ReadonlyURLSearchParams,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+
+export type FilterParamName = "cidade" | "categoria" | "data" | "pesquisa";
 
 export function useFilters() {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [optimisticParams, setOptimisticParams] = useOptimistic<
-    URLSearchParams | ReadonlyURLSearchParams
-  >(searchParams);
+  const [optimisticParams, setOptimisticParams] =
+    useOptimistic<URLSearchParams>(searchParams);
 
-  const setParams = (newParams: { name: string; value: string | null }[]) => {
+  const setParams = (
+    newParams: { name: FilterParamName; value: string | null }[]
+  ) => {
     const params = new URLSearchParams(searchParams.toString());
 
     for (const { name, value } of newParams) {
@@ -34,10 +33,10 @@ export function useFilters() {
 
   const clearAllParams = () => {
     setParams([
-      { name: "city", value: null },
-      { name: "category", value: null },
-      { name: "date", value: null },
-      { name: "search", value: null },
+      { name: "cidade", value: null },
+      { name: "categoria", value: null },
+      { name: "data", value: null },
+      { name: "pesquisa", value: null },
     ]);
   };
 

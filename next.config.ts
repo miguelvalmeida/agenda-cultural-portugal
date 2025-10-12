@@ -4,6 +4,15 @@ const nextConfig: NextConfig = {
   experimental: {
     devtoolSegmentExplorer: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/eventos',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

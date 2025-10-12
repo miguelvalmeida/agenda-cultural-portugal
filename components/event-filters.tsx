@@ -31,34 +31,34 @@ export function EventFilters() {
   const { optimisticParams, setParams, clearAllParams, isPending } =
     useFilters();
 
-  const selectedCity = optimisticParams.get("city") || "";
-  const selectedCategory = optimisticParams.get("category") || "";
-  const selectedSearch = optimisticParams.get("search") || "";
-  const selectedDate = optimisticParams.get("date")
-    ? new Date(optimisticParams.get("date") || "")
+  const selectedCity = optimisticParams.get("cidade") || "";
+  const selectedCategory = optimisticParams.get("categoria") || "";
+  const selectedSearch = optimisticParams.get("pesquisa") || "";
+  const selectedDate = optimisticParams.get("data")
+    ? new Date(optimisticParams.get("data") || "")
     : null;
 
   const handleCityChange = (value: string) => {
-    const newCity = value === "all" ? "" : value;
-    setParams([{ name: "city", value: newCity }]);
+    const newCityId = value === "all" ? "" : value;
+    setParams([{ name: "cidade", value: newCityId }]);
   };
 
   const handleCategoryChange = (value: string) => {
     const newCategory = value === "all" ? "" : value;
-    setParams([{ name: "category", value: newCategory }]);
+    setParams([{ name: "categoria", value: newCategory }]);
   };
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      setParams([{ name: "date", value: format(date, "yyyy-MM-dd") }]);
+      setParams([{ name: "data", value: format(date, "yyyy-MM-dd") }]);
     } else {
-      setParams([{ name: "date", value: null }]);
+      setParams([{ name: "data", value: null }]);
     }
     setIsDatePopoverOpen(false);
   };
 
   const debouncedSearch = useDebouncedCallback((value: string) => {
-    setParams([{ name: "search", value: value || null }]);
+    setParams([{ name: "pesquisa", value: value || null }]);
   }, 300);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -7,23 +7,23 @@ import { EventsListSkeleton } from "@/components/events-list-skeleton";
 import { ErrorFallback } from "@/components/error-boundaries";
 import { EventFilters as EventFiltersComponent } from "@/components/event-filters";
 
-interface HomeProps {
+interface EventosProps {
   searchParams: Promise<{
-    city?: string;
-    category?: string;
-    date?: string;
-    search?: string;
+    cidade?: string;
+    categoria?: string;
+    data?: string;
+    pesquisa?: string;
   }>;
 }
 
-export default async function Home({ searchParams }: HomeProps) {
+export default async function Eventos({ searchParams }: EventosProps) {
   const params = await searchParams;
 
   const filters: EventFilters = {
-    city: params.city || undefined,
-    category: params.category || undefined,
-    date: params.date || undefined,
-    search: params.search || undefined,
+    city: params.cidade || undefined,
+    category: params.categoria || undefined,
+    date: params.data || undefined,
+    search: params.pesquisa || undefined,
   };
 
   return (
