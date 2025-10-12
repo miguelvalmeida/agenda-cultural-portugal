@@ -34,7 +34,9 @@ export async function fetchEvents(
 
   // Apply search filter - case-insensitive search on title and location
   if (filters.search) {
-    query = query.or(`title.ilike.%${filters.search}%,location.ilike.%${filters.search}%`);
+    query = query.or(
+      `title.ilike.%${filters.search}%,location.ilike.%${filters.search}%`
+    );
   }
 
   // Order by start date ascending

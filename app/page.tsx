@@ -45,7 +45,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         <div className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">Eventos</h2>
-          <ErrorBoundary fallback={<ErrorFallback />}>
+          <ErrorBoundary fallbackRender={ErrorFallback}>
             <Suspense fallback={<EventsListSkeleton />}>
               <EventsList filters={filters} />
             </Suspense>

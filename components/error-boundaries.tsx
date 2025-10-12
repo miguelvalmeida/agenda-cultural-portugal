@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarX, RefreshCw } from "lucide-react";
+import type { FallbackProps } from "react-error-boundary";
 
 import {
   Empty,
@@ -12,11 +13,7 @@ import {
 } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
 
-export function ErrorFallback() {
-  const handleRetry = () => {
-    window.location.reload();
-  };
-
+export function ErrorFallback({ resetErrorBoundary }: FallbackProps) {
   return (
     <Empty>
       <EmptyHeader>
@@ -29,7 +26,10 @@ export function ErrorFallback() {
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button onClick={handleRetry} className="flex items-center gap-2">
+        <Button
+          onClick={resetErrorBoundary}
+          className="flex items-center gap-2"
+        >
           <RefreshCw className="h-4 w-4" />
           Tentar novamente
         </Button>

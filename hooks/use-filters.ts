@@ -2,7 +2,7 @@
 
 import { useOptimistic, useTransition } from "react";
 import {
-  ReadonlyURLSearchParams,
+  type ReadonlyURLSearchParams,
   useRouter,
   useSearchParams,
 } from "next/navigation";
