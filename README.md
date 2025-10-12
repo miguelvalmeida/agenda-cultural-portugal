@@ -1,6 +1,6 @@
 # 📅 Agenda Cultural Portugal
 
-Discover cultural events, exhibitions, concerts, and activities all over Portugal.
+Discover cultural events, exhibitions, concerts and activities all over Portugal.
 
 ## Getting Started
 
