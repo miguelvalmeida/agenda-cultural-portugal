@@ -1,27 +1,39 @@
 "use client";
 
-import { CalendarX } from "lucide-react";
+import { CalendarX, RefreshCw } from "lucide-react";
 
 import {
   Empty,
+  EmptyContent,
   EmptyHeader,
   EmptyTitle,
   EmptyDescription,
   EmptyMedia,
 } from "@/components/ui/empty";
+import { Button } from "@/components/ui/button";
 
 export function ErrorFallback() {
+  const handleRetry = () => {
+    window.location.reload();
+  };
+
   return (
     <Empty>
-      <EmptyMedia>
-        <CalendarX className="h-12 w-12 text-gray-400" />
-      </EmptyMedia>
       <EmptyHeader>
+        <EmptyMedia>
+          <CalendarX className="h-12 w-12 text-gray-400" />
+        </EmptyMedia>
         <EmptyTitle>Erro ao carregar conteúdo</EmptyTitle>
         <EmptyDescription>
           Ocorreu um erro inesperado. Tente novamente.
         </EmptyDescription>
       </EmptyHeader>
+      <EmptyContent>
+        <Button onClick={handleRetry} className="flex items-center gap-2">
+          <RefreshCw className="h-4 w-4" />
+          Tentar novamente
+        </Button>
+      </EmptyContent>
     </Empty>
   );
 }

@@ -40,6 +40,7 @@ export function useFilters() {
   };
 
   return {
+    searchParams,
     optimisticParams,
     setParams,
     clearAllParams,

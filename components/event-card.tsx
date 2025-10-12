@@ -15,9 +15,10 @@ import { Badge } from "@/components/ui/badge";
 
 interface EventCardProps {
   event: Event;
+  priority?: boolean;
 }
 
-export function EventCard({ event }: EventCardProps) {
+export function EventCard({ event, priority = false }: EventCardProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return format(date, "dd MMM yyyy", { locale: pt });
@@ -43,6 +44,7 @@ export function EventCard({ event }: EventCardProps) {
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover"
+          priority={priority}
         />
         <div className="absolute top-2 right-2">
           <Badge variant="secondary" className="bg-white/90 text-gray-800">

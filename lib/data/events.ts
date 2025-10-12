@@ -7,6 +7,7 @@ export interface EventFilters {
   city?: string;
   category?: string;
   date?: string;
+  search?: string;
 }
 
 export async function fetchEvents(
@@ -29,6 +30,11 @@ export async function fetchEvents(
   // Apply date filter - events starting from or after the selected date
   if (filters.date) {
     query = query.gte("startDate", filters.date);
+  }
+
+  // Apply search filter - case-insensitive search on title and location
+  if (filters.search) {
+    query = query.or(`title.ilike.%${filters.search}%,location.ilike.%${filters.search}%`);
   }
 
   // Order by start date ascending

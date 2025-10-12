@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarIcon, X } from "lucide-react";
+import { CalendarIcon, X, Search } from "lucide-react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
+import { useDebouncedCallback } from "use-debounce";
 
 import { getCategoryLabel } from "@/lib/utils";
 import { useFilters } from "@/hooks/use-filters";
@@ -22,15 +23,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function EventFilters() {
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
-
   const { optimisticParams, setParams, clearAllParams, isPending } =
     useFilters();
 
   const selectedCity = optimisticParams.get("city") || "";
   const selectedCategory = optimisticParams.get("category") || "";
+  const selectedSearch = optimisticParams.get("search") || "";
   const selectedDate = optimisticParams.get("date")
     ? new Date(optimisticParams.get("date") || "")
     : null;
@@ -54,23 +57,47 @@ export function EventFilters() {
     setIsDatePopoverOpen(false);
   };
 
-  const hasActiveFilters = selectedCity || selectedCategory || selectedDate;
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    setParams("search", value || null);
+  }, 300);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedSearch(event.target.value);
+  };
+
+  const hasActiveFilters =
+    selectedCity || selectedCategory || selectedDate || selectedSearch;
 
   return (
     <div
       className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 sm:p-6"
       data-pending={isPending ? "" : undefined}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        {/* Search Filter */}
+        <div className="space-y-2 sm:col-span-2 lg:col-span-1">
+          <Label htmlFor="search-input">Pesquisar</Label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              id="search-input"
+              type="text"
+              placeholder="Pesquisar eventos..."
+              defaultValue={selectedSearch}
+              onChange={handleSearchChange}
+              className="pl-10 h-10"
+            />
+          </div>
+        </div>
+
         {/* City Filter */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Cidade</label>
-          <Select
-            value={selectedCity || "all"}
-            onValueChange={handleCityChange}
-          >
-            <SelectTrigger className="w-full !h-10">
-              <SelectValue placeholder="Selecionar cidade" />
+          <Label htmlFor="city-select">Cidade</Label>
+          <Select value={selectedCity} onValueChange={handleCityChange}>
+            <SelectTrigger id="city-select" className="w-full !h-10">
+              <SelectValue placeholder="Selecionar cidade">
+                {selectedCity ? selectedCity : "Todas as cidades"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todas as cidades</SelectItem>
@@ -85,13 +112,14 @@ export function EventFilters() {
 
         {/* Category Filter */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Categoria</label>
-          <Select
-            value={selectedCategory || "all"}
-            onValueChange={handleCategoryChange}
-          >
-            <SelectTrigger className="w-full !h-10">
-              <SelectValue placeholder="Selecionar categoria" />
+          <Label htmlFor="category-select">Categoria</Label>
+          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+            <SelectTrigger id="category-select" className="w-full !h-10">
+              <SelectValue placeholder="Selecionar categoria">
+                {selectedCategory
+                  ? getCategoryLabel(selectedCategory)
+                  : "Todas as categorias"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todas as categorias</SelectItem>
@@ -106,17 +134,20 @@ export function EventFilters() {
 
         {/* Date Filter */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Data</label>
+          <Label htmlFor="date-button">Data</Label>
           <Popover open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen}>
             <PopoverTrigger asChild>
               <Button
+                id="date-button"
                 variant="outline"
                 className="w-full justify-start text-left font-normal h-10"
               >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate
-                  ? format(selectedDate, "dd/MM/yyyy", { locale: pt })
-                  : "Selecionar data"}
+                <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
+                {selectedDate ? (
+                  format(selectedDate, "dd/MM/yyyy", { locale: pt })
+                ) : (
+                  <span className="text-muted-foreground">Selecionar data</span>
+                )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">

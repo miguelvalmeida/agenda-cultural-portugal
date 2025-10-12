@@ -3,7 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import type { EventFilters } from "@/lib/data/events";
 import { EventsList } from "@/components/events-list";
-import { EventsSkeleton } from "@/components/skeletons";
+import { EventsListSkeleton } from "@/components/events-list-skeleton";
 import { ErrorFallback } from "@/components/error-boundaries";
 import { EventFilters as EventFiltersComponent } from "@/components/event-filters";
 
@@ -12,6 +12,7 @@ interface HomeProps {
     city?: string;
     category?: string;
     date?: string;
+    search?: string;
   }>;
 }
 
@@ -22,6 +23,7 @@ export default async function Home({ searchParams }: HomeProps) {
     city: params.city || undefined,
     category: params.category || undefined,
     date: params.date || undefined,
+    search: params.search || undefined,
   };
 
   return (
@@ -44,7 +46,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">Eventos</h2>
           <ErrorBoundary fallback={<ErrorFallback />}>
-            <Suspense fallback={<EventsSkeleton />}>
+            <Suspense fallback={<EventsListSkeleton />}>
               <EventsList filters={filters} />
             </Suspense>
           </ErrorBoundary>
