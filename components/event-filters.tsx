@@ -70,8 +70,8 @@ export function EventFilters() {
 
   return (
     <div
-      className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 sm:p-6"
       data-pending={isPending ? "" : undefined}
+      className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 sm:p-6"
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
         {/* Search Filter */}

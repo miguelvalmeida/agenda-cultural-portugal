@@ -35,18 +35,18 @@ export function EventsEmptyState() {
     }
 
     if (selectedCity) {
-      activeFilters.push(`cidade "${selectedCity}"`);
+      activeFilters.push(`na cidade "${selectedCity}"`);
     }
 
     if (selectedCategory) {
-      activeFilters.push(`categoria "${getCategoryLabel(selectedCategory)}"`);
+      activeFilters.push(`com categoria "${getCategoryLabel(selectedCategory)}"`);
     }
 
     if (selectedDate) {
       const formattedDate = format(new Date(selectedDate), "dd/MM/yyyy", {
         locale: pt,
       });
-      activeFilters.push(`data "${formattedDate}"`);
+      activeFilters.push(`com data "${formattedDate}"`);
     }
 
     if (activeFilters.length === 0) {
@@ -60,14 +60,14 @@ export function EventsEmptyState() {
     if (activeFilters.length === 1) {
       return {
         title: "Nenhum evento encontrado",
-        description: `Não foram encontrados eventos com ${activeFilters[0]}. Tente ajustar os filtros para ver mais eventos.`,
+        description: `Não foram encontrados eventos ${activeFilters[0]}. Tente ajustar os filtros para ver mais eventos.`,
       };
     }
 
     if (activeFilters.length === 2) {
       return {
         title: "Nenhum evento encontrado",
-        description: `Não foram encontrados eventos com ${activeFilters[0]} e ${activeFilters[1]}. Tente ajustar os filtros para ver mais eventos.`,
+        description: `Não foram encontrados eventos ${activeFilters[0]} e ${activeFilters[1]}. Tente ajustar os filtros para ver mais eventos.`,
       };
     }
 
@@ -77,7 +77,7 @@ export function EventsEmptyState() {
 
     return {
       title: "Nenhum evento encontrado",
-      description: `Não foram encontrados eventos com ${filtersText} e ${lastFilter}. Tente ajustar os filtros para ver mais eventos.`,
+      description: `Não foram encontrados eventos ${filtersText} e ${lastFilter}. Tente ajustar os filtros para ver mais eventos.`,
     };
   };
 
@@ -85,30 +85,34 @@ export function EventsEmptyState() {
 
   return (
     <Empty
-      className="group transition-all duration-300 data-[pending]:opacity-60 data-[pending]:scale-95"
       data-pending={isPending ? "" : undefined}
+      className="transition-all duration-300 group-has-data-pending:opacity-60 group-has-data-pending:scale-95"
     >
       <EmptyHeader>
         <EmptyMedia>
-          <div className="transition-all duration-500 group-data-[pending]:animate-bounce">
+          <div className="transition-all duration-500 group-has-data-pending:animate-bounce">
             <CalendarX className="h-12 w-12 text-gray-400" />
           </div>
         </EmptyMedia>
-        <EmptyTitle className="transition-all duration-300 group-data-[pending]:animate-pulse">
-          {isPending ? "A procurar eventos..." : title}
+        <EmptyTitle className="transition-all duration-300">
+          <span className="group-has-data-pending:hidden">{title}</span>
+          <span className="hidden group-has-data-pending:block">
+            A procurar eventos...
+          </span>
         </EmptyTitle>
-        <EmptyDescription className="transition-all duration-300 group-data-[pending]:animate-pulse">
-          {isPending
-            ? "Aguarde enquanto filtramos os eventos para você."
-            : description}
+        <EmptyDescription className="transition-all duration-300">
+          <span className="group-has-data-pending:hidden">{description}</span>
+          <span className="hidden group-has-data-pending:block">
+            Estamos a filtrar os eventos para si. Por favor, aguarde um momento.
+          </span>
         </EmptyDescription>
       </EmptyHeader>
-      {hasActiveFilters && !isPending && (
+      {hasActiveFilters && (
         <EmptyContent>
           <Button
             variant="outline"
             onClick={clearAllParams}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 group-has-data-pending:hidden"
           >
             <FilterX className="h-4 w-4" />
             Limpar todos os filtros
