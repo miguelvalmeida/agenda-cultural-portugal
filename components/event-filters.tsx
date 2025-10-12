@@ -40,25 +40,25 @@ export function EventFilters() {
 
   const handleCityChange = (value: string) => {
     const newCity = value === "all" ? "" : value;
-    setParams("city", newCity);
+    setParams([{ name: "city", value: newCity }]);
   };
 
   const handleCategoryChange = (value: string) => {
     const newCategory = value === "all" ? "" : value;
-    setParams("category", newCategory);
+    setParams([{ name: "category", value: newCategory }]);
   };
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      setParams("date", format(date, "yyyy-MM-dd"));
+      setParams([{ name: "date", value: format(date, "yyyy-MM-dd") }]);
     } else {
-      setParams("date", null);
+      setParams([{ name: "date", value: null }]);
     }
     setIsDatePopoverOpen(false);
   };
 
   const debouncedSearch = useDebouncedCallback((value: string) => {
-    setParams("search", value || null);
+    setParams([{ name: "search", value: value || null }]);
   }, 300);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {

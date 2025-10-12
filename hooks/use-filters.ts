@@ -15,13 +15,15 @@ export function useFilters() {
     URLSearchParams | ReadonlyURLSearchParams
   >(searchParams);
 
-  const setParams = (key: string, value: string | null) => {
+  const setParams = (newParams: { name: string; value: string | null }[]) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
+    for (const { name, value } of newParams) {
+      if (value) {
+        params.set(name, value);
+      } else {
+        params.delete(name);
+      }
     }
 
     startTransition(() => {
@@ -31,12 +33,12 @@ export function useFilters() {
   };
 
   const clearAllParams = () => {
-    const params = new URLSearchParams();
-
-    startTransition(() => {
-      setOptimisticParams(params);
-      router.push(`?${params.toString()}`);
-    });
+    setParams([
+      { name: "city", value: null },
+      { name: "category", value: null },
+      { name: "date", value: null },
+      { name: "search", value: null },
+    ]);
   };
 
   return {
