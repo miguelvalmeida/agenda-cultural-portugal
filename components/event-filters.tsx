@@ -75,7 +75,7 @@ export function EventFilters() {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
         {/* Search Filter */}
-        <div className="space-y-2 sm:col-span-2 lg:col-span-1">
+        <div className="grid gap-2 sm:col-span-2 lg:col-span-1">
           <Label htmlFor="search-input">Pesquisar</Label>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -91,7 +91,7 @@ export function EventFilters() {
         </div>
 
         {/* City Filter */}
-        <div className="space-y-2">
+        <div className="grid gap-2">
           <Label htmlFor="city-select">Cidade</Label>
           <Select value={selectedCity} onValueChange={handleCityChange}>
             <SelectTrigger id="city-select" className="w-full !h-10">
@@ -111,7 +111,7 @@ export function EventFilters() {
         </div>
 
         {/* Category Filter */}
-        <div className="space-y-2">
+        <div className="grid gap-2">
           <Label htmlFor="category-select">Categoria</Label>
           <Select value={selectedCategory} onValueChange={handleCategoryChange}>
             <SelectTrigger id="category-select" className="w-full !h-10">
@@ -133,7 +133,7 @@ export function EventFilters() {
         </div>
 
         {/* Date Filter */}
-        <div className="space-y-2">
+        <div className="grid gap-2">
           <Label htmlFor="date-button">Data</Label>
           <Popover open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen}>
             <PopoverTrigger asChild>
@@ -165,19 +165,15 @@ export function EventFilters() {
         </div>
 
         {/* Clear Filters Button */}
-        <div>
-          <Button
-            variant="outline"
-            onClick={() => clearAllParams()}
-            className={`w-full sm:w-auto flex items-center justify-center gap-2 h-10 transition-opacity ${
-              hasActiveFilters ? "opacity-100" : "opacity-50"
-            }`}
-            disabled={!hasActiveFilters}
-          >
-            <X className="h-4 w-4" />
-            Limpar filtros
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          onClick={() => clearAllParams()}
+          className="w-full sm:w-fit flex items-center justify-center gap-2 h-10 transition-opacity"
+          disabled={!hasActiveFilters}
+        >
+          <X className="h-4 w-4" />
+          Limpar filtros
+        </Button>
       </div>
     </div>
   );
