@@ -1,5 +1,11 @@
 import Image from "next/image";
-import { Calendar, MapPin, Building2, ExternalLink } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Building2,
+  ExternalLink,
+  ImageIcon,
+} from "lucide-react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
@@ -38,14 +44,20 @@ export function EventCard({ event, priority = false }: EventCardProps) {
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] group-has-data-pending:pointer-events-none group-has-data-pending:animate-pulse pt-0">
       <div className="relative h-48 w-full overflow-hidden">
-        <Image
-          src={event.imageUrl || ""}
-          alt={event.title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover"
-          priority={priority}
-        />
+        {event.imageUrl ? (
+          <Image
+            src={event.imageUrl}
+            alt={event.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover"
+            priority={priority}
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full w-full bg-gray-200 text-gray-400">
+            <ImageIcon className="size-12" />
+          </div>
+        )}
         <div className="absolute top-2 right-2">
           <Badge variant="secondary" className="bg-white/90 text-gray-800">
             {getCategoryLabel(event.category || "other")}
@@ -54,9 +66,7 @@ export function EventCard({ event, priority = false }: EventCardProps) {
       </div>
 
       <CardHeader className="pb-2">
-        <h3 className="font-semibold text-lg line-clamp-2">
-          {event.title}
-        </h3>
+        <h3 className="font-semibold text-lg line-clamp-2">{event.title}</h3>
       </CardHeader>
 
       <CardContent className="space-y-2">
