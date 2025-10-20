@@ -17,10 +17,7 @@ interface EventosProps {
 }
 
 export default async function Eventos({ searchParams }: EventosProps) {
-  console.log('[Eventos] Page component rendering with searchParams:', searchParams);
-  
   const params = await searchParams;
-  console.log('[Eventos] Resolved params:', params);
 
   const filters: EventFilters = {
     city: params.cidade || undefined,
@@ -28,8 +25,6 @@ export default async function Eventos({ searchParams }: EventosProps) {
     date: params.data || undefined,
     search: params.pesquisa || undefined,
   };
-  
-  console.log('[Eventos] Built filters:', filters);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -51,9 +46,13 @@ export default async function Eventos({ searchParams }: EventosProps) {
         <div className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">Eventos</h2>
           <ErrorBoundary fallbackRender={ErrorFallback}>
-            <Suspense fallback={<EventsListSkeleton />}>
+            {Object.values(params).every((value) => !value) ? (
+              <Suspense fallback={<EventsListSkeleton />}>
+                <EventsList filters={filters} />
+              </Suspense>
+            ) : (
               <EventsList filters={filters} />
-            </Suspense>
+            )}
           </ErrorBoundary>
         </div>
       </div>
