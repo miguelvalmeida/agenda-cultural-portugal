@@ -53,15 +53,13 @@ export async function fetchEvents(
 
   console.log('[fetchEvents] Executing query...');
   
-  // Add timeout and more detailed logging
+  // Add timeout to prevent hanging queries
   const queryPromise = query;
-  const timeoutPromise = new Promise((_, reject) => 
+  const timeoutPromise = new Promise<never>((_, reject) => 
     setTimeout(() => reject(new Error('Query timeout after 10 seconds')), 10000)
   );
   
-  console.log('[fetchEvents] Query URL would be:', queryPromise.url);
-  
-  const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+  const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
   console.log('[fetchEvents] Query completed. Error:', error, 'Data length:', data?.length);
 
   if (error) {
