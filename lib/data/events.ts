@@ -38,8 +38,13 @@ export async function fetchEvents(
 
   if (filters.search) {
     console.log('[fetchEvents] Applying search filter:', filters.search);
+    
+    // Escape special characters that could break PostgREST OR queries
+    const escapedSearch = filters.search.replace(/[(),]/g, '\\$&');
+    console.log('[fetchEvents] Escaped search term:', escapedSearch);
+    
     query = query.or(
-      `title.ilike.%${filters.search}%,location.ilike.%${filters.search}%`
+      `title.ilike.%${escapedSearch}%,location.ilike.%${escapedSearch}%`
     );
   }
 
@@ -47,7 +52,16 @@ export async function fetchEvents(
   query = query.order("startDate", { ascending: true });
 
   console.log('[fetchEvents] Executing query...');
-  const { data, error } = await query;
+  
+  // Add timeout and more detailed logging
+  const queryPromise = query;
+  const timeoutPromise = new Promise((_, reject) => 
+    setTimeout(() => reject(new Error('Query timeout after 10 seconds')), 10000)
+  );
+  
+  console.log('[fetchEvents] Query URL would be:', queryPromise.url);
+  
+  const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
   console.log('[fetchEvents] Query completed. Error:', error, 'Data length:', data?.length);
 
   if (error) {
