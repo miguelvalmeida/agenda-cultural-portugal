@@ -1,18 +1,16 @@
 # 📅 Agenda Cultural Portugal
 
-Discover cultural events, exhibitions, concerts and activities all over Portugal.
+Easily find and explore a wide variety of cultural events, exhibitions, concerts, and activities happening throughout Portugal.
 
-## Getting Started
+## Key features
 
-First, start the development server:
+- **Event Discovery**: Browse cultural events by city, category, and date
+- **Advanced Filtering**: Filter events by location, category, date range, and search terms
+- **Responsive Design**: Optimized for both desktop and mobile devices
+- **Real-time Data**: Events are stored and managed through Supabase
+- **Modern UI**: Built with user friendly and accessible components
 
-```bash
-bun dev
-```
-
-Open `http://localhost:3000` in your browser to view the application.
-
-## Stack
+## Tech stack
 
 - **Next.js**
 - **React**
