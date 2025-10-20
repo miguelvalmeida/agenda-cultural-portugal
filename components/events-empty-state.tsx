@@ -17,12 +17,12 @@ import {
 import { Button } from "@/components/ui/button";
 
 export function EventsEmptyState() {
-  const { searchParams, clearAllParams, isPending } = useFilters();
+  const { optimisticParams, clearAllParams, isPending } = useFilters();
 
-  const selectedCity = searchParams.get("city");
-  const selectedCategory = searchParams.get("category");
-  const selectedDate = searchParams.get("date");
-  const selectedSearch = searchParams.get("search");
+  const selectedCity = optimisticParams.get("cidade");
+  const selectedCategory = optimisticParams.get("categoria");
+  const selectedDate = optimisticParams.get("data");
+  const selectedSearch = optimisticParams.get("pesquisa");
 
   const hasActiveFilters =
     selectedCity || selectedCategory || selectedDate || selectedSearch;

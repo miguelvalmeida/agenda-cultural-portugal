@@ -1,13 +1,14 @@
 "use client";
 
 import { useOptimistic, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export type FilterParamName = "cidade" | "categoria" | "data" | "pesquisa";
 
 export function useFilters() {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [optimisticParams, setOptimisticParams] =
     useOptimistic<URLSearchParams>(searchParams);
@@ -25,9 +26,18 @@ export function useFilters() {
       }
     }
 
+    const nextQuery = params.toString();
+    const currentQuery = searchParams.toString();
+
+    // Avoid no-op transitions when nothing changes
+    if (nextQuery === currentQuery) {
+      return;
+    }
+
     startTransition(() => {
       setOptimisticParams(params);
-      router.push(`?${params.toString()}`);
+      const url = nextQuery ? `${pathname}?${nextQuery}` : `${pathname}`;
+      router.push(url);
     });
   };
 
