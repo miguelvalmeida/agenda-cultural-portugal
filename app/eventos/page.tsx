@@ -17,7 +17,10 @@ interface EventosProps {
 }
 
 export default async function Eventos({ searchParams }: EventosProps) {
+  console.log('[Eventos] Page component rendering with searchParams:', searchParams);
+  
   const params = await searchParams;
+  console.log('[Eventos] Resolved params:', params);
 
   const filters: EventFilters = {
     city: params.cidade || undefined,
@@ -25,6 +28,8 @@ export default async function Eventos({ searchParams }: EventosProps) {
     date: params.data || undefined,
     search: params.pesquisa || undefined,
   };
+  
+  console.log('[Eventos] Built filters:', filters);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

@@ -16,6 +16,8 @@ export function useFilters() {
   const setParams = (
     newParams: { name: FilterParamName; value: string | null }[]
   ) => {
+    console.log("[useFilters] setParams called with:", newParams);
+
     const params = new URLSearchParams(searchParams.toString());
 
     for (const { name, value } of newParams) {
@@ -26,18 +28,18 @@ export function useFilters() {
       }
     }
 
-    const nextQuery = params.toString();
-    const currentQuery = searchParams.toString();
-
-    // Avoid no-op transitions when nothing changes
-    if (nextQuery === currentQuery) {
-      return;
-    }
+    console.log("[useFilters] Starting transition...");
 
     startTransition(() => {
+      console.log("[useFilters] Transition callback executing");
       setOptimisticParams(params);
-      const url = nextQuery ? `${pathname}?${nextQuery}` : `${pathname}`;
-      router.push(url);
+      console.log("[useFilters] Optimistic params set");
+      console.log(
+        "[useFilters] Pushing URL:",
+        `${pathname}?${params.toString()}`
+      );
+      router.push(`${pathname}?${params.toString()}`);
+      console.log("[useFilters] Router.push completed");
     });
   };
 
