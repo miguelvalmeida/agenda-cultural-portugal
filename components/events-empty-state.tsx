@@ -17,12 +17,12 @@ import {
 import { Button } from "@/components/ui/button";
 
 export function EventsEmptyState() {
-  const { optimisticParams, clearAllParams, isPending } = useFilters();
+  const { searchParams, clearAllParams } = useFilters();
 
-  const selectedCity = optimisticParams.get("cidade");
-  const selectedCategory = optimisticParams.get("categoria");
-  const selectedDate = optimisticParams.get("data");
-  const selectedSearch = optimisticParams.get("pesquisa");
+  const selectedCity = searchParams.get("cidade");
+  const selectedCategory = searchParams.get("categoria");
+  const selectedDate = searchParams.get("data");
+  const selectedSearch = searchParams.get("pesquisa");
 
   const hasActiveFilters =
     selectedCity || selectedCategory || selectedDate || selectedSearch;
@@ -39,7 +39,9 @@ export function EventsEmptyState() {
     }
 
     if (selectedCategory) {
-      activeFilters.push(`com categoria "${getCategoryLabel(selectedCategory)}"`);
+      activeFilters.push(
+        `com categoria "${getCategoryLabel(selectedCategory)}"`
+      );
     }
 
     if (selectedDate) {
@@ -84,35 +86,20 @@ export function EventsEmptyState() {
   const { title, description } = getCustomMessage();
 
   return (
-    <Empty
-      data-pending={isPending ? "" : undefined}
-      className="transition-all duration-300 group-has-data-pending:opacity-60 group-has-data-pending:scale-95"
-    >
+    <Empty>
       <EmptyHeader>
         <EmptyMedia>
-          <div className="transition-all duration-500 group-has-data-pending:animate-bounce">
-            <CalendarX className="h-12 w-12 text-gray-400" />
-          </div>
+          <CalendarX className="h-12 w-12 text-gray-400" />
         </EmptyMedia>
-        <EmptyTitle className="transition-all duration-300">
-          <span className="group-has-data-pending:hidden">{title}</span>
-          <span className="hidden group-has-data-pending:block">
-            A procurar eventos...
-          </span>
-        </EmptyTitle>
-        <EmptyDescription className="transition-all duration-300">
-          <span className="group-has-data-pending:hidden">{description}</span>
-          <span className="hidden group-has-data-pending:block">
-            Estamos a filtrar os eventos para si. Por favor, aguarde um momento.
-          </span>
-        </EmptyDescription>
+        <EmptyTitle>{title}</EmptyTitle>
+        <EmptyDescription>{description}</EmptyDescription>
       </EmptyHeader>
       {hasActiveFilters && (
         <EmptyContent>
           <Button
             variant="outline"
             onClick={clearAllParams}
-            className="flex items-center gap-2 group-has-data-pending:hidden"
+            className="flex items-center gap-2"
           >
             <FilterX className="h-4 w-4" />
             Limpar todos os filtros
