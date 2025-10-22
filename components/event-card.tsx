@@ -65,7 +65,7 @@ export function EventCard({ event, priority = false }: EventCardProps) {
         </div>
       </div>
 
-      <CardHeader className="pb-2">
+      <CardHeader className="gap-0">
         <h3 className="font-semibold text-lg line-clamp-2">{event.title}</h3>
       </CardHeader>
 
@@ -88,7 +88,7 @@ export function EventCard({ event, priority = false }: EventCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="pt-2">
+      <CardFooter className="mt-auto">
         {event.url && (
           <a
             href={event.url}
