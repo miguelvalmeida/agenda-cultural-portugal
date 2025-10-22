@@ -71,19 +71,19 @@ export function EventCard({ event, priority = false }: EventCardProps) {
 
       <CardContent className="space-y-2">
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Calendar className="h-4 w-4 flex-shrink-0" />
+          <Calendar className="h-4 w-4 shrink-0" />
           <span>{formatDateRange(event.startDate || "", event.endDate)}</span>
         </div>
 
         {event.location && (
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <MapPin className="h-4 w-4 flex-shrink-0" />
+            <MapPin className="h-4 w-4 shrink-0" />
             <span className="line-clamp-1">{event.location}</span>
           </div>
         )}
 
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Building2 className="h-4 w-4 flex-shrink-0" />
+          <Building2 className="h-4 w-4 shrink-0" />
           <span>{event.city}</span>
         </div>
       </CardContent>

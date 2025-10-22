@@ -1,14 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    devtoolSegmentExplorer: true,
-  },
+  reactCompiler: true,
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/eventos',
+        source: "/",
+        destination: "/eventos",
         permanent: true,
       },
     ];
