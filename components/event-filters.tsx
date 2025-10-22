@@ -5,6 +5,7 @@ import { CalendarIcon, X, Search } from "lucide-react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { useDebouncedCallback } from "use-debounce";
+import type { DateRange } from "react-day-picker";
 
 import { getCategoryLabel } from "@/lib/utils";
 import { useFilters } from "@/hooks/use-filters";
@@ -25,18 +26,39 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DateRangePresets } from "@/components/date-range-presets";
 
 export function EventFilters() {
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
-  const { optimisticParams, setParams, clearAllParams, isPending } =
-    useFilters();
+  const {
+    optimisticParams,
+    setParams,
+    clearAllParams,
+    isPending,
+    searchParams,
+  } = useFilters();
 
   const selectedCity = optimisticParams.get("cidade") || "";
   const selectedCategory = optimisticParams.get("categoria") || "";
   const selectedSearch = optimisticParams.get("pesquisa") || "";
-  const selectedDate = optimisticParams.get("data")
-    ? new Date(optimisticParams.get("data") || "")
-    : null;
+  const selectedDateFrom = searchParams.get("de")
+    ? new Date(searchParams.get("de") || "")
+    : undefined;
+  const selectedDateTo = searchParams.get("ate")
+    ? new Date(searchParams.get("ate") || "")
+    : undefined;
+
+  const selectedDateRange: DateRange | undefined = selectedDateFrom
+    ? { from: selectedDateFrom, to: selectedDateTo }
+    : undefined;
+
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    setParams([{ name: "pesquisa", value: value || null }]);
+  }, 300);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedSearch(event.target.value);
+  };
 
   const handleCityChange = (value: string) => {
     const newCityId = value === "all" ? "" : value;
@@ -48,25 +70,23 @@ export function EventFilters() {
     setParams([{ name: "categoria", value: newCategory }]);
   };
 
-  const handleDateChange = (date: Date | undefined) => {
-    if (date) {
-      setParams([{ name: "data", value: format(date, "yyyy-MM-dd") }]);
-    } else {
-      setParams([{ name: "data", value: null }]);
-    }
+  const handleDateRangeChange = (range: DateRange | undefined) => {
+    setParams([
+      {
+        name: "de",
+        value: range?.from ? format(range.from, "yyyy-MM-dd") : null,
+      },
+      { name: "ate", value: range?.to ? format(range.to, "yyyy-MM-dd") : null },
+    ]);
     setIsDatePopoverOpen(false);
   };
 
-  const debouncedSearch = useDebouncedCallback((value: string) => {
-    setParams([{ name: "pesquisa", value: value || null }]);
-  }, 300);
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
-  };
-
   const hasActiveFilters =
-    selectedCity || selectedCategory || selectedDate || selectedSearch;
+    selectedCity ||
+    selectedCategory ||
+    selectedDateFrom ||
+    selectedDateTo ||
+    selectedSearch;
 
   return (
     <div
@@ -94,7 +114,7 @@ export function EventFilters() {
         <div className="grid gap-2">
           <Label htmlFor="city-select">Cidade</Label>
           <Select value={selectedCity} onValueChange={handleCityChange}>
-            <SelectTrigger id="city-select" className="w-full !h-10">
+            <SelectTrigger id="city-select" className="w-full h-10!">
               <SelectValue placeholder="Selecionar cidade">
                 {selectedCity ? selectedCity : "Todas as cidades"}
               </SelectValue>
@@ -114,7 +134,7 @@ export function EventFilters() {
         <div className="grid gap-2">
           <Label htmlFor="category-select">Categoria</Label>
           <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-            <SelectTrigger id="category-select" className="w-full !h-10">
+            <SelectTrigger id="category-select" className="w-full h-10!">
               <SelectValue placeholder="Selecionar categoria">
                 {selectedCategory
                   ? getCategoryLabel(selectedCategory)
@@ -132,34 +152,51 @@ export function EventFilters() {
           </Select>
         </div>
 
-        {/* Date Filter */}
+        {/* Date Range Filter */}
         <div className="grid gap-2">
-          <Label htmlFor="date-button">Data</Label>
+          <Label htmlFor="date-range-button">Datas</Label>
           <Popover open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen}>
             <PopoverTrigger asChild>
               <Button
-                id="date-button"
+                id="date-range-button"
                 variant="outline"
                 className="w-full justify-start text-left font-normal h-10"
               >
                 <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
-                {selectedDate ? (
-                  format(selectedDate, "dd/MM/yyyy", { locale: pt })
+                {selectedDateRange?.from ? (
+                  selectedDateRange.to ? (
+                    `${format(selectedDateRange.from, "dd/MM/yyyy", {
+                      locale: pt,
+                    })} - ${format(selectedDateRange.to, "dd/MM/yyyy", {
+                      locale: pt,
+                    })}`
+                  ) : (
+                    `A partir de ${format(
+                      selectedDateRange.from,
+                      "dd/MM/yyyy",
+                      { locale: pt }
+                    )}`
+                  )
                 ) : (
-                  <span className="text-muted-foreground">Selecionar data</span>
+                  <span className="text-muted-foreground">
+                    Selecionar datas
+                  </span>
                 )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
-                mode="single"
-                selected={selectedDate || undefined}
-                onSelect={handleDateChange}
+                mode="range"
+                selected={selectedDateRange}
+                onSelect={handleDateRangeChange}
                 disabled={(date) =>
                   date < new Date(new Date().setHours(0, 0, 0, 0))
                 }
+                numberOfMonths={2}
+                showOutsideDays={false}
                 locale={pt}
               />
+              <DateRangePresets onSelectRange={handleDateRangeChange} />
             </PopoverContent>
           </Popover>
         </div>

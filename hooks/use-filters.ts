@@ -3,7 +3,7 @@
 import { useOptimistic, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export type FilterParamName = "cidade" | "categoria" | "data" | "pesquisa";
+export type FilterParamName = "cidade" | "categoria" | "de" | "ate" | "pesquisa";
 
 export function useFilters() {
   const [isPending, startTransition] = useTransition();
@@ -36,7 +36,8 @@ export function useFilters() {
     setParams([
       { name: "cidade", value: null },
       { name: "categoria", value: null },
-      { name: "data", value: null },
+      { name: "de", value: null },
+      { name: "ate", value: null },
       { name: "pesquisa", value: null },
     ]);
   };

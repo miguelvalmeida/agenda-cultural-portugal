@@ -6,7 +6,8 @@ export type Event = Tables<"events">;
 export interface EventFilters {
   city?: string;
   category?: string;
-  date?: string;
+  startDate?: string;
+  endDate?: string;
   search?: string;
 }
 
@@ -25,8 +26,12 @@ export async function fetchEvents(
     query = query.eq("category", filters.category);
   }
 
-  if (filters.date) {
-    query = query.gte("startDate", filters.date);
+  if (filters.startDate) {
+    query = query.gte("startDate", filters.startDate);
+  }
+
+  if (filters.endDate) {
+    query = query.lte("startDate", filters.endDate);
   }
 
   if (filters.search) {

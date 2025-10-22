@@ -11,7 +11,8 @@ interface EventosProps {
   searchParams: Promise<{
     cidade?: string;
     categoria?: string;
-    data?: string;
+    de?: string;
+    ate?: string;
     pesquisa?: string;
   }>;
 }
@@ -22,7 +23,8 @@ export default async function Eventos({ searchParams }: EventosProps) {
   const filters: EventFilters = {
     city: params.cidade || undefined,
     category: params.categoria || undefined,
-    date: params.data || undefined,
+    startDate: params.de || undefined,
+    endDate: params.ate || undefined,
     search: params.pesquisa || undefined,
   };
 
