@@ -18,24 +18,24 @@ export function DateRangePresets({ onSelectRange }: DateRangePresetsProps) {
       label: "Hoje",
       getRange: () => ({ from: today, to: today }),
     },
-    {
-      label: "Este fim de semana",
-      getRange: () => {
-        const today = new Date();
-        const dayOfWeek = today.getDay();
+      {
+        label: "Este fim de semana",
+        getRange: () => {
+          const today = new Date();
+          const dayOfWeek = today.getDay();
 
-        // Find this Saturday
-        const daysUntilSaturday = (6 - dayOfWeek) % 7;
-        const saturday = new Date(today);
-        saturday.setDate(today.getDate() + daysUntilSaturday);
+          // Find this Friday (or next Friday if today is Saturday/Sunday)
+          const daysUntilFriday = (5 - dayOfWeek + 7) % 7;
+          const friday = new Date(today);
+          friday.setDate(today.getDate() + daysUntilFriday);
 
-        // Find this Sunday
-        const sunday = new Date(saturday);
-        sunday.setDate(saturday.getDate() + 1);
+          // Find this Sunday
+          const sunday = new Date(friday);
+          sunday.setDate(friday.getDate() + 2);
 
-        return { from: saturday, to: sunday };
+          return { from: friday, to: sunday };
+        },
       },
-    },
     {
       label: "Próxima semana",
       getRange: () => {

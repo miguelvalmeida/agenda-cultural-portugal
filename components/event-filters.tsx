@@ -93,7 +93,7 @@ export function EventFilters() {
       data-pending={isPending ? "" : undefined}
       className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 sm:p-6"
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-5 gap-4 items-end">
         {/* Search Filter */}
         <div className="grid gap-2 sm:col-span-2 lg:col-span-1">
           <Label htmlFor="search-input">Pesquisar</Label>
