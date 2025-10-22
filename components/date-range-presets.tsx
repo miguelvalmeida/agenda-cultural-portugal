@@ -59,7 +59,7 @@ export function DateRangePresets({ onSelectRange }: DateRangePresetsProps) {
   ];
 
   return (
-    <div className="p-3 border-t">
+    <div className="p-3 border-t hidden md:block">
       <div className="grid grid-cols-2 gap-2">
         {presets.map((preset) => (
           <Button
