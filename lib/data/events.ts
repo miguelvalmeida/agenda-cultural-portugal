@@ -14,7 +14,7 @@ export interface EventFilters {
 export async function fetchEvents(
   filters: EventFilters = {}
 ): Promise<Event[]> {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   let query = supabase.from("events").select("*");
 

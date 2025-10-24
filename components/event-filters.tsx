@@ -1,203 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarIcon, X, Search, Filter, ChevronDown } from "lucide-react";
+import { X, Filter, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
-import { pt } from "date-fns/locale";
 import { useDebouncedCallback } from "use-debounce";
 import type { DateRange } from "react-day-picker";
 
-import { getCategoryLabel } from "@/lib/utils";
 import { useFilters } from "@/hooks/use-filters";
-import { CITIES, CATEGORIES } from "@/lib/constants";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { DateRangePresets } from "@/components/date-range-presets";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-
-function SearchFilter({
-  selectedSearch,
-  handleSearchChange,
-}: {
-  selectedSearch: string;
-  handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
-  return (
-    <div className="grid gap-2 sm:col-span-2 lg:col-span-1">
-      <Label htmlFor="search-input">Pesquisar</Label>
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <Input
-          id="search-input"
-          type="text"
-          placeholder="Pesquisar eventos..."
-          defaultValue={selectedSearch}
-          onChange={handleSearchChange}
-          className="pl-10 h-9 text-sm md:h-10"
-        />
-      </div>
-    </div>
-  );
-}
-
-function CityFilter({
-  selectedCity,
-  handleCityChange,
-}: {
-  selectedCity: string;
-  handleCityChange: (value: string) => void;
-}) {
-  return (
-    <div className="grid gap-2">
-      <Label htmlFor="city">Cidade</Label>
-      <Select value={selectedCity} onValueChange={handleCityChange}>
-        <SelectTrigger id="city" className="h-9 text-sm w-full md:h-10!">
-          <SelectValue placeholder="Cidade">
-            {selectedCity ? selectedCity : "Todas as cidades"}
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Todas as cidades</SelectItem>
-          {CITIES.map((city) => (
-            <SelectItem key={city} value={city}>
-              {city}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
-
-function CategoryFilter({
-  selectedCategory,
-  handleCategoryChange,
-}: {
-  selectedCategory: string;
-  handleCategoryChange: (value: string) => void;
-}) {
-  return (
-    <div className="grid gap-2">
-      <Label htmlFor="category">Categoria</Label>
-      <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-        <SelectTrigger id="category" className="h-9 text-sm w-full md:h-10!">
-          <SelectValue placeholder="Categoria">
-            {selectedCategory
-              ? getCategoryLabel(selectedCategory)
-              : "Todas as categorias"}
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Todas as categorias</SelectItem>
-          {CATEGORIES.map((category) => (
-            <SelectItem key={category} value={category}>
-              {getCategoryLabel(category)}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
-
-function DateRangeFilter({
-  selectedDateRange,
-  handleDateRangeChange,
-  isDatePopoverOpen,
-  setIsDatePopoverOpen,
-  isMobile = false,
-}: {
-  selectedDateRange: DateRange | undefined;
-  handleDateRangeChange: (range: DateRange | undefined) => void;
-  isDatePopoverOpen: boolean;
-  setIsDatePopoverOpen: (open: boolean) => void;
-  isMobile?: boolean;
-}) {
-  return (
-    <div className="grid gap-2">
-      <Label htmlFor="date-range">Datas</Label>
-      <Popover open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            id="date-range"
-            variant="outline"
-            className="w-full justify-start text-left font-normal h-9 text-sm md:h-10"
-          >
-            <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
-            {selectedDateRange?.from ? (
-              selectedDateRange.to ? (
-                `${format(selectedDateRange.from, "dd/MM/yyyy", {
-                  locale: pt,
-                })} - ${format(selectedDateRange.to, "dd/MM/yyyy", {
-                  locale: pt,
-                })}`
-              ) : (
-                `A partir de ${format(selectedDateRange.from, "dd/MM/yyyy", {
-                  locale: pt,
-                })}`
-              )
-            ) : (
-              <span className="text-muted-foreground">Datas</span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            mode="range"
-            selected={selectedDateRange}
-            onSelect={handleDateRangeChange}
-            disabled={(date) =>
-              date < new Date(new Date().setHours(0, 0, 0, 0))
-            }
-            numberOfMonths={isMobile ? 1 : 2}
-            showOutsideDays={false}
-            locale={pt}
-            className="w-full md:w-auto"
-          />
-          <DateRangePresets onSelectRange={handleDateRangeChange} />
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
-
-function ClearFiltersButton({
-  hasActiveFilters,
-  clearAllParams,
-}: {
-  hasActiveFilters: boolean;
-  clearAllParams: () => void;
-}) {
-  return (
-    <Button
-      variant="outline"
-      onClick={() => clearAllParams()}
-      className="w-full lg:w-fit flex items-center justify-center gap-2 h-10"
-      disabled={!hasActiveFilters}
-    >
-      <X className="h-4 w-4" />
-      Limpar filtros
-    </Button>
-  );
-}
+import { DateRangeFilter } from "@/components/date-range-filter";
+import { SearchInputFilter } from "@/components/search-input-filter";
+import { CityFilter } from "@/components/city-filter";
+import { CategoryFilter } from "@/components/category-filter";
+import { ClearFiltersButton } from "@/components/clear-filters-button";
 
 export function EventFilters() {
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
@@ -280,7 +99,7 @@ export function EventFilters() {
             <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
           </CollapsibleTrigger>
           <CollapsibleContent className="p-3 space-y-3 border-t">
-            <SearchFilter
+            <SearchInputFilter
               selectedSearch={selectedSearch}
               handleSearchChange={handleSearchChange}
             />
@@ -311,7 +130,7 @@ export function EventFilters() {
 
       <div className="hidden md:block p-4 lg:p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-5 gap-4 items-end">
-          <SearchFilter
+          <SearchInputFilter
             selectedSearch={selectedSearch}
             handleSearchChange={handleSearchChange}
           />
